@@ -59,4 +59,4 @@ typings/
 
 # typescript
 *.js
-!test/*.js
+!test/**/*.js
