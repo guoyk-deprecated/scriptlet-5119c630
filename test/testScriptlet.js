@@ -61,4 +61,11 @@ describe('scriptlet', () => {
     assert.equal(diffHrtime(diff1, diff2) > 0, true)
     assert.equal(diffHrtime(diff2, diff3) > 0, true)
   })
+  it('should works with builtin $load function', async () => {
+    const ret = await scriptlet.run(path.join(__dirname, 'scripts', 'load.js'), {
+      extra: new Map([['$input', 'b']])
+    })
+    assert.equal(ret.val1, 'b')
+    assert.equal(ret.val2, 'AA')
+  })
 })

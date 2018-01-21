@@ -1,5 +1,5 @@
 /**
- * loop2.js
+ * loadTarget.js
  *
  * Copyright (c) 2018 Yanke Guo <guoyk.cn@gmail.com>
  *
@@ -8,6 +8,6 @@
  */
 
 /* global define */
-define('$load', async function ($load) {
-  await $load('./loop3')
+define('$input', 'lodash', function ($input, _) {
+  return _.toUpper($input + $input)
 })

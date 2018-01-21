@@ -81,6 +81,41 @@ export class ScriptletError extends Error {
 }
 
 /**
+ * clone a scriptlet option, keeps '_loopTracker' reference, but clone 'extra',
+ * preventing lower level extra modification overrides upper level
+ * @param option scriptlet option
+ */
+function cloneScriptletOption(
+    option: IScriptletOption, moreExtra?: Map<string, any>): IScriptletOption {
+  const newOption = {} as IScriptletOption;
+  newOption.cache = option.cache;
+  newOption._loopTracker = option._loopTracker;
+  if (option.extra || moreExtra) {
+    newOption.extra = new Map<string, any>();
+    if (option.extra) {
+      for (const entry of option.extra) {
+        newOption.extra.set(entry[0], entry[1]);
+      }
+    }
+    if (moreExtra) {
+      for (const entry of moreExtra) {
+        newOption.extra.set(entry[0], entry[1]);
+      }
+    }
+  }
+  return newOption;
+}
+
+/**
+ * resolve a relative scriptlet path
+ * @param fullPath fullpath of the scriptlet
+ * @param name relative name of target scriptlet
+ */
+function resolveRelativeScriptlet(fullPath: string, name: string): string {
+  return path.resolve(path.dirname(fullPath), name + ".js");
+}
+
+/**
  * run a scriptlet
  * @param id scriptlet file to run
  * @param option scriptlet execution option
@@ -130,13 +165,21 @@ export async function run(
   // resolve dependencies
   const args = [];
   for (const dep of deps) {
-    if (option.extra && option.extra.has(dep)) {
+    if (dep === "$load") {
+      // buildtin $load function
+      args.push(async (name: string, extra?: Map<string, any>) => {
+        return run(
+            resolveRelativeScriptlet(fullPath, name),
+            cloneScriptletOption(option, extra));
+      });
+    } else if (option.extra && option.extra.has(dep)) {
       // option.extra contains that dep, key prefixed with $ is suggested
       args.push(option.extra.get(dep));
     } else if (dep.startsWith(".")) {
       // relative scriptlet
-      const depPath = path.resolve(path.dirname(fullPath), dep + ".js");
-      args.push(await run(depPath, option));
+      args.push(await run(
+          resolveRelativeScriptlet(fullPath, dep),
+          cloneScriptletOption(option)));
     } else {
       // node.js require()
       try {
