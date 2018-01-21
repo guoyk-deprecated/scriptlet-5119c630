@@ -92,7 +92,8 @@ export async function run(
   // check dependency loop
   option._loopTracker = option._loopTracker || new Set();
   if (option._loopTracker.has(fullPath)) {
-    throw new ScriptletError(ERR_DEPENDENCY_LOOP, `dependency loop detected in ${file}`);
+    throw new ScriptletError(
+        ERR_DEPENDENCY_LOOP, `dependency loop detected in ${file}`);
   }
   option._loopTracker.add(fullPath);
   // apply cache policy
@@ -141,13 +142,15 @@ export async function run(
       try {
         args.push(require(dep));
       } catch (e) {
-        throw new ScriptletError(ERR_DEPENDENCY_MISSING, `failed to resolve dependency ${dep} in script ${fullPath}`);
+        throw new ScriptletError(
+            ERR_DEPENDENCY_MISSING,
+            `failed to resolve dependency ${dep} in script ${fullPath}`);
       }
     }
   }
   if (typeof object === "function") {
-      return object(...args);
+    return object(...args);
   } else {
-      return object;
+    return object;
   }
 }
