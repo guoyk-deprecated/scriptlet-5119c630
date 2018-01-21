@@ -1,0 +1,24 @@
+{
+  "name": "scriptlet",
+  "version": "0.0.0",
+  "description": "scriptlet engine for node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yankeguo/scriptlet.git"
+  },
+  "keywords": [
+    "scriptlet",
+    "engine",
+    "microservice"
+  ],
+  "author": "Yanke Guo <guoyk.cn@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yankeguo/scriptlet/issues"
+  },
+  "homepage": "https://github.com/yankeguo/scriptlet#readme"
+}
